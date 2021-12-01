@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>API</name>
+    </assembly>
+    <members>
+        <member name="M:API.Controllers.CategoriesController.Get">
+            <summary>
+            Get All Category
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.CategoriesController.Get(System.Int32)">
+            <summary>
+            Get Category By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.CategoriesController.Post(Entities.Category)">
+            <summary>
+            Create a Category
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.CategoriesController.Put(Entities.Category)">
+            <summary>
+            Update the Category
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.CategoriesController.Delete(System.Int32)">
+            <summary>
+            Delete the Category
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:API.Controllers.ProductsController.Get">
+            <summary>
+            GetAllProducts
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.ProductsController.Get(System.Int32)">
+            <summary>
+            GetProductById
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.ProductsController.Post(Entities.Product)">
+            <summary>
+            Create a Product
+            </summary>
+            <param name="product"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.ProductsController.Put(Entities.Product)">
+            <summary>
+            Update the Product
+            </summary>
+            <param name="product"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.ProductsController.Delete(System.Int32)">
+            <summary>
+            Delete the Product
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.UsersController.Get">
+            <summary>
+            Get All Users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.UsersController.Get(System.Int32)">
+            <summary>
+            Get User By Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.UsersController.Post(Entities.User)">
+            <summary>
+            Create a User
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.UsersController.Put(Entities.User)">
+            <summary>
+            Update the User
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:API.Controllers.UsersController.Delete(System.Int32)">
+            <summary>
+            Delete the User
+            </summary>
+            <param name="id"></param>
+        </member>
+    </members>
+</doc>
