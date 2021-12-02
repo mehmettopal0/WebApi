@@ -16,4 +16,5 @@ namespace Entities
         public int ParentId { get; set; }
         public List<Employee> SubChild { get; set; }
     }
+    //deneme
 }
