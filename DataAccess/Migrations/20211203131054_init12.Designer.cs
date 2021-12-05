@@ -4,14 +4,16 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(WebApiDbContext))]
-    partial class WebApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211203131054_init12")]
+    partial class init12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,9 +63,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -72,7 +71,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("ParentId");
 
                     b.ToTable("Employees");
                 });
@@ -138,9 +137,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Employee", b =>
                 {
-                    b.HasOne("Entities.Employee", null)
+                    b.HasOne("Entities.Employee", "ParentEmployee")
                         .WithMany("SubChild")
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("ParentEmployee");
                 });
 
             modelBuilder.Entity("Entities.Product", b =>

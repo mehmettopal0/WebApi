@@ -28,7 +28,9 @@ namespace Business.Concrete
 
         public List<Employee> GetAll()
         {
+
             return _employeeDal.GetAll();
+            
         }
 
         public List<Employee> GetAllChildByParent(int id)

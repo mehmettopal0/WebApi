@@ -31,11 +31,9 @@ namespace DataAccess.Concrete
                             sub.SubChild = new List<Employee>();
 
                         GetChilds(sub.Id, sub.SubChild);
-                        if (!listchild.Contains(sub))
-                            listchild.Add(sub);
+                        listchild.Add(sub);
                     }
                 }
-                context.SaveChanges();
             }
         }
     }

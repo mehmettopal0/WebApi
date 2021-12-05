@@ -6,7 +6,7 @@ namespace DataAccess
     public class WebApiDbContext:DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-          => options.UseSqlServer("Server=DESKTOP-LIMLNDB;Database=WebAPIDB;Trusted_connection=true;");
+          => options.UseSqlServer("Server=DESKTOP-LIMLNDB;Database=APIDatabase;Trusted_connection=true;");
 
         //public WebApiDbContext(DbContextOptions<WebApiDbContext> options) : base(options) { }
         //push hatası deneme
