@@ -21,6 +21,11 @@ namespace Business.Concrete
             _employeeDal.Add(entity);
         }
 
+        public void AddTree(Employee entity)
+        {
+            _employeeDal.AddTree(entity);
+        }
+
         public void Delete(int id)
         {
             _employeeDal.Delete(id);

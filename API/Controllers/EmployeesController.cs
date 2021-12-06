@@ -78,11 +78,23 @@ namespace API.Controllers
 
         }
         /// <summary>
-        /// Update the Employee
+        /// Create an Employees
         /// </summary>
         /// <param name="employee"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost("addtree")]
+        public IActionResult PostEmployeeTree([FromBody] Employee employee)
+        {
+            _employeeService.AddTree(employee);
+            return Ok("Ekleme işlemi başarılı...Eklenen kişi: " + employee.Name); //201 + data
+
+        }
+            /// <summary>
+            /// Update the Employee
+            /// </summary>
+            /// <param name="employee"></param>
+            /// <returns></returns>
+            [HttpPut]
         public IActionResult Put([FromBody] Employee employee)
         {
             if (_employeeService.GetById(employee.Id) != null)

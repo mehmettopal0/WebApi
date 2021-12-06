@@ -11,5 +11,6 @@ namespace DataAccess.Abstract
     public interface IEmployeeDal : IEntityRepository<Employee>
     {
         List<Employee> GetAllChildByParent(int parentId);
+        void AddTree(Employee entity);
     }
 }
