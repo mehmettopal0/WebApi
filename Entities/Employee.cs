@@ -13,8 +13,11 @@ namespace Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int ParentId { get; set; }
-        public List<Employee> SubChild { get; set; }
+        public int? ParentId { get; set; }
+
+        [ForeignKey("ParentId")]
+        public virtual Employee Parent { get; set; }
+        public virtual ICollection<Employee> SubChild { get; set; }
         
 
     }

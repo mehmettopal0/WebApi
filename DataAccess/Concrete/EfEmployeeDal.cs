@@ -61,7 +61,7 @@ namespace DataAccess.Concrete
             return result;
         }
 
-        private void GetChilds(int parentId, List<Employee> listchild)
+        private void GetChilds(int parentId, ICollection<Employee> listchild)
         {
             using (WebApiDbContext context = new WebApiDbContext())
             {
