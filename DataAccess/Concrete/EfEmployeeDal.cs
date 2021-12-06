@@ -1,4 +1,5 @@
 ﻿using Core.DataAccess.EntityFramework;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,21 @@ namespace DataAccess.Concrete
 {
     public class EfEmployeeDal : EfEntityRepositoryBase<Employee, WebApiDbContext>, IEmployeeDal
     {
-        public void AddTree(Employee entity)
+        public IResult AddTree(Employee entity)
         {
             using (WebApiDbContext context = new WebApiDbContext())
             {
+                var emptree = context.Employees.FirstOrDefault(x => x.Id == entity.ParentId);
+                if (emptree != null || entity.ParentId==0) { 
+                if (entity.ParentId >= 0) {
                 List<Employee> employee = context.Employees.Where(x => x.ParentId == entity.ParentId).ToList();
                 if (employee == null)
                 {
                     var addedEntity = context.Entry(entity);
                     addedEntity.State = EntityState.Added;
                     context.SaveChanges();
-                }
+                        return new SuccessResult();
+                    }
                 else
                 {
                     var addedEntity = context.Entry(entity);
@@ -34,8 +39,18 @@ namespace DataAccess.Concrete
                     }
                     
                     context.SaveChanges();
+                        return new SuccessResult();
+                    }
                 }
-                
+                else
+                {
+                    return new ErrorResult("ParentId 0'dan küçük olamaz!");
+                }
+                }
+                else
+                {
+                    return new ErrorResult("Böyle bir ParentId bulunamadı!");
+                }
             }
         }
 
@@ -48,9 +63,10 @@ namespace DataAccess.Concrete
 
         private void GetChilds(int parentId, List<Employee> listchild)
         {
-            using (WebApiDbContext context = new WebApiDbContext()) 
-            { 
-            var subchild = context.Employees.Where(p => p.ParentId == parentId).ToList();
+            using (WebApiDbContext context = new WebApiDbContext())
+            {
+
+                var subchild = context.Employees.Where(p => p.ParentId == parentId).ToList();
                 if (subchild.Any())
                 {
                     foreach (var sub in subchild)

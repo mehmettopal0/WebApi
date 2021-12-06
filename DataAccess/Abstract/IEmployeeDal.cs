@@ -1,4 +1,5 @@
 ﻿using Core.DataAccess;
+using Core.Utilities.Results;
 using Entities;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,6 @@ namespace DataAccess.Abstract
     public interface IEmployeeDal : IEntityRepository<Employee>
     {
         List<Employee> GetAllChildByParent(int parentId);
-        void AddTree(Employee entity);
+        IResult AddTree(Employee entity);
     }
 }

@@ -18,6 +18,6 @@ namespace DataAccess
         public DbSet<AutPersonCredential> AutPersonCredentials { get; set; }
         public DbSet<Employee> Employees { get; set; }
 
-        
+
     }
 }

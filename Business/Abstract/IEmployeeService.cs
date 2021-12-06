@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using Core.Utilities.Results;
+using Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace Business.Abstract
         Employee GetById(int id);
         List<Employee> GetByParent(int id);
         List<Employee> GetAllChildByParent(int id);
-        void Add(Employee entity);
-        void AddTree(Employee entity);
+        IResult Add(Employee entity);
+        IResult AddTree(Employee entity);
         void Update(Employee entity);
         void Delete(int id);
     }

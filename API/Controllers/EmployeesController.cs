@@ -73,8 +73,8 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Employee employee)
         {
-            _employeeService.Add(employee);
-            return Ok("Ekleme işlemi başarılı...Eklenen kişi: " + employee.Name); //201 + data
+            var result = _employeeService.Add(employee);
+            return Ok(result); //201 + data
 
         }
         /// <summary>
@@ -85,8 +85,8 @@ namespace API.Controllers
         [HttpPost("addtree")]
         public IActionResult PostEmployeeTree([FromBody] Employee employee)
         {
-            _employeeService.AddTree(employee);
-            return Ok("Ekleme işlemi başarılı...Eklenen kişi: " + employee.Name); //201 + data
+            var result=_employeeService.AddTree(employee);
+            return Ok(result); //201 + data
 
         }
             /// <summary>

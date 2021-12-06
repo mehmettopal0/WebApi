@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Results;
+using DataAccess;
 using DataAccess.Abstract;
 using Entities;
 using System;
@@ -16,14 +18,33 @@ namespace Business.Concrete
         {
             _employeeDal = employeeDal;
         }
-        public void Add(Employee entity)
+        public IResult Add(Employee entity)
         {
-            _employeeDal.Add(entity);
+            using (WebApiDbContext context = new WebApiDbContext())
+            {
+            var emptree = context.Employees.FirstOrDefault(x => x.Id == entity.ParentId);
+            if (emptree != null || entity.ParentId == 0)
+            {
+                if (entity.ParentId >= 0)
+                {
+                       _employeeDal.Add(entity);
+                       return new SuccessResult();
+                    }
+                else
+                {
+                        return new ErrorResult("ParentId 0'dan küçük olamaz!");
+                    }
+            }
+            else
+            {
+                    return new ErrorResult("Böyle bir ParentId bulunamadı!");
+            }
+            }
         }
 
-        public void AddTree(Employee entity)
+        public IResult AddTree(Employee entity)
         {
-            _employeeDal.AddTree(entity);
+            return _employeeDal.AddTree(entity);
         }
 
         public void Delete(int id)
