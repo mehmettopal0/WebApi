@@ -17,9 +17,8 @@ namespace DataAccess.Concrete
         {
             using (WebApiDbContext context = new WebApiDbContext())
             {
-                var emptree = context.Employees.FirstOrDefault(x => x.Id == entity.ParentId);
-                if (emptree != null || entity.ParentId==0) { 
-                if (entity.ParentId >= 0) {
+                
+                 
                 List<Employee> employee = context.Employees.Where(x => x.ParentId == entity.ParentId).ToList();
                 if (employee == null)
                 {
@@ -41,16 +40,8 @@ namespace DataAccess.Concrete
                     context.SaveChanges();
                         return new SuccessResult();
                     }
-                }
-                else
-                {
-                    return new ErrorResult("ParentId 0'dan küçük olamaz!");
-                }
-                }
-                else
-                {
-                    return new ErrorResult("Böyle bir ParentId bulunamadı!");
-                }
+                
+                
             }
         }
 

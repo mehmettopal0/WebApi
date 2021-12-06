@@ -22,26 +22,18 @@ namespace Business.Concrete
         {
             using (WebApiDbContext context = new WebApiDbContext())
             {
-            var emptree = context.Employees.FirstOrDefault(x => x.Id == entity.ParentId);
-            if (emptree != null || entity.ParentId == 0)
-            {
                 if (entity.ParentId >= 0)
                 {
-                       _employeeDal.Add(entity);
-                       return new SuccessResult();
-                    }
+                    _employeeDal.Add(entity);
+                    return new SuccessResult();
+                }
                 else
                 {
-                        return new ErrorResult("ParentId 0'dan küçük olamaz!");
-                    }
-            }
-            else
-            {
-                    return new ErrorResult("Böyle bir ParentId bulunamadı!");
-            }
+                    return new ErrorResult("ParentId 0'dan küçük olamaz!");
+                }
+
             }
         }
-
         public IResult AddTree(Employee entity)
         {
             return _employeeDal.AddTree(entity);
