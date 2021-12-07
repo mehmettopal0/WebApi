@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace API
@@ -33,7 +34,16 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddControllers();
+            services.AddMemoryCache();
+
+            //services.AddStackExchangeRedisCache(action =>
+            //{
+            //    action.Configuration = "localhost:6379";
+            //});
+            services.AddControllers().AddJsonOptions(x =>
+                           x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
             //services.AddDbContext<WebApiDbContext>(options =>
             //         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSingleton<ICategoryService,CategoryManager>();
