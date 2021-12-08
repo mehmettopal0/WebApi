@@ -2,9 +2,12 @@
 using Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -14,10 +17,11 @@ namespace API.Controllers
     public class EmployeesController : ControllerBase
     {
         private IEmployeeService _employeeService;
-
-        public EmployeesController(IEmployeeService employeeService)
+        private readonly IDistributedCache _distributedCache;
+        public EmployeesController(IEmployeeService employeeService, IDistributedCache distributedCache)
         {
             _employeeService = employeeService;
+            _distributedCache = distributedCache;
         }
         /// <summary>
         /// Get All Employees
@@ -61,8 +65,28 @@ namespace API.Controllers
         [HttpGet("getallchildbyparent")]
         public IActionResult GetAllChildByParent(int id)
         {
-            var result = _employeeService.GetAllChildByParent(id);
-            return Ok(result);
+            var cacheKey = "getallchildbyparent";
+            string serializedEmployeeList;
+            var employees = new List<Employee>();
+            var redisEmployeeList = _distributedCache.Get(cacheKey);
+            if (redisEmployeeList != null)
+            {
+                serializedEmployeeList = Encoding.UTF8.GetString(redisEmployeeList);
+                employees = JsonConvert.DeserializeObject<List<Employee>>(serializedEmployeeList);
+            }
+            else
+            {
+                employees = _employeeService.GetAllChildByParent(id);
+                serializedEmployeeList = JsonConvert.SerializeObject(employees);
+                redisEmployeeList = Encoding.UTF8.GetBytes(serializedEmployeeList);
+                var options = new DistributedCacheEntryOptions()
+                    .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(2));
+                _distributedCache.SetAsync(cacheKey, redisEmployeeList, options);
+            }
+            return Ok(employees);
+            //var result = _employeeService.GetAllChildByParent(id);
+            //return Ok(result);
         }
 
         /// <summary>
