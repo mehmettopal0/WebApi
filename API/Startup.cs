@@ -38,10 +38,10 @@ namespace API
             services.AddControllers();
             services.AddMemoryCache();
 
-            //services.AddStackExchangeRedisCache(action =>
-            //{
-            //    action.Configuration = "localhost:6379";
-            //});
+            services.AddStackExchangeRedisCache(action =>
+            {
+                action.Configuration = "localhost:6379";
+            });
             services.AddControllers().AddJsonOptions(x =>
                            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
             //services.AddDbContext<WebApiDbContext>(options =>
