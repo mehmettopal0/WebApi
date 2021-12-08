@@ -37,6 +37,7 @@ namespace API
             
             services.AddControllers();
             services.AddMemoryCache();
+            //services.AddSingleton<ICacheService, RedisCacheService>();
 
             services.AddStackExchangeRedisCache(action =>
             {
@@ -46,6 +47,7 @@ namespace API
                            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
             //services.AddDbContext<WebApiDbContext>(options =>
             //         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddSingleton<ICategoryService,CategoryManager>();
             services.AddSingleton<ICategoryDal, EfCategoryDal>();
             services.AddSingleton<IProductService, ProductManager>();

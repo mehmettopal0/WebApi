@@ -23,14 +23,15 @@ namespace API.Controllers
         private ICategoryService _categoryService;
         private readonly IDistributedCache _distributedCache;
         private readonly IMemoryCache _memoryCache;
+        //private readonly ICacheService _cacheService;
 
-        public CategoriesController(ICategoryService categoryService, IMemoryCache memoryCache, IDistributedCache distributedCache)
+        public CategoriesController(ICategoryService categoryService, /*ICacheService cacheService, */IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
             _categoryService = categoryService;
             _distributedCache = distributedCache;
             _memoryCache = memoryCache;
+            //_cacheService = cacheService;
         }
-
         /// <summary>
         /// Get All Category
         /// </summary>
@@ -85,6 +86,25 @@ namespace API.Controllers
         // [Route("getCategoryById/{id}")] => api/category/getCategoryById/2
         public IActionResult Get(int id)
         {
+            //{
+            //    var models = _cacheService.Get<List<Category>>("models");
+            //    if (models != null)
+            //    {
+            //        try
+            //        {
+
+            //            var model = models.FirstOrDefault(p => p.CategoryId == id);
+            //            if (model != null)
+            //            {
+            //                return Ok(model);
+            //            }
+            //        }
+            //        catch (System.Exception)
+            //        {
+            //        }
+            //    }
+            //    return BadRequest("Üye bulunamadı");
+            //}
             var categories = _categoryService.GetById(id);
             return Ok(categories); //200 + data
         }

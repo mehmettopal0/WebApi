@@ -18,10 +18,12 @@ namespace API.Controllers
     {
         private IEmployeeService _employeeService;
         private readonly IDistributedCache _distributedCache;
-        public EmployeesController(IEmployeeService employeeService, IDistributedCache distributedCache)
+        //private readonly ICacheService _cacheService;
+        public EmployeesController(IEmployeeService employeeService, /*ICacheService cacheService,*/ IDistributedCache distributedCache)
         {
             _employeeService = employeeService;
             _distributedCache = distributedCache;
+            //_cacheService = cacheService;
         }
         /// <summary>
         /// Get All Employees
