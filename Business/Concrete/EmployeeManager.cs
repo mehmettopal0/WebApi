@@ -20,19 +20,11 @@ namespace Business.Concrete
         }
         public IResult Add(Employee entity)
         {
-            using (WebApiDbContext context = new WebApiDbContext())
-            {
-                if (entity.ParentId >= 0)
-                {
-                    _employeeDal.Add(entity);
-                    return new SuccessResult();
-                }
-                else
-                {
-                    return new ErrorResult("ParentId 0'dan küçük olamaz!");
-                }
+            _employeeDal.Add(entity);
+            return  new SuccessResult(); 
 
-            }
+
+            
         }
         public IResult AddTree(Employee entity)
         {

@@ -17,18 +17,10 @@ namespace DataAccess.Concrete
         {
             using (WebApiDbContext context = new WebApiDbContext())
             {
-                
-                 
-                List<Employee> employee = context.Employees.Where(x => x.ParentId == entity.ParentId).ToList();
-                if (employee == null)
+                var empl = context.Employees.FirstOrDefault(e => e.Id == entity.ParentId);
+                if (empl != null)
                 {
-                    var addedEntity = context.Entry(entity);
-                    addedEntity.State = EntityState.Added;
-                    context.SaveChanges();
-                        return new SuccessResult();
-                    }
-                else
-                {
+                    List<Employee> employee = context.Employees.Where(x => x.ParentId == entity.ParentId).ToList();
                     var addedEntity = context.Entry(entity);
                     addedEntity.State = EntityState.Added;
                     context.SaveChanges();
@@ -36,12 +28,11 @@ namespace DataAccess.Concrete
                     {
                         emp.ParentId = entity.Id;
                     }
-                    
                     context.SaveChanges();
-                        return new SuccessResult();
-                    }
-                
-                
+                    return new SuccessResult();
+                }
+                return new ErrorResult();
+               
             }
         }
 
