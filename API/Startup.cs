@@ -1,4 +1,5 @@
 ﻿using API.Authentication;
+using API.Redis;
 using Business.Abstract;
 using Business.Concrete;
 using DataAccess;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +36,12 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             services.AddControllers();
             services.AddMemoryCache();
+            services.AddSingleton<RedisServer>();
+            services.AddSingleton<ICacheService, RedisCacheService>();
+
             //services.AddSingleton<ICacheService, RedisCacheService>();
 
             services.AddStackExchangeRedisCache(action =>
@@ -47,16 +52,24 @@ namespace API
                            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
             //services.AddDbContext<WebApiDbContext>(options =>
             //         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
-            services.AddSingleton<ICategoryService,CategoryManager>();
+
+            services.AddSingleton<ICategoryService, CategoryManager>();
             services.AddSingleton<ICategoryDal, EfCategoryDal>();
             services.AddSingleton<IProductService, ProductManager>();
-            services.AddSingleton<IProductDal, EfProductDal>(); 
+            services.AddSingleton<IProductDal, EfProductDal>();
             services.AddSingleton<IUserService, UserManager>();
             services.AddSingleton<IUserDal, EfUserDal>();
             services.AddSingleton<IEmployeeService, EmployeeManager>();
             services.AddSingleton<IEmployeeDal, EfEmployeeDal>();
-   
+            
+
+            //var multiplexer = ConnectionMultiplexer.Connect(new ConfigurationOptions
+            //{
+            //    EndPoints = { $"{Configuration.GetValue<string>("RedisCache:Host")}:{Configuration.GetValue<int>("RedisCache:Port")}" }
+
+            //});
+            //services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyTitle", Version = "v1" });
@@ -82,7 +95,7 @@ namespace API
                       new string[] { }
                     }
                   });
-             });
+            });
 
             string key = "Bu hash için oluşturacağım key";
 
@@ -105,7 +118,7 @@ namespace API
                 };
             });
             services.AddSingleton<IJWTAuthenticationManager>(new JWTAuthenticationManager(key));
-            
+
 
 
         }
@@ -132,7 +145,7 @@ namespace API
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSwagger();
-            
+
 
             app.UseEndpoints(endpoints =>
             {

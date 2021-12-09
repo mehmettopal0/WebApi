@@ -1,4 +1,5 @@
 ﻿using API.Authentication;
+using API.Redis;
 using Business.Abstract;
 using Business.Concrete;
 using Entities;
@@ -18,10 +19,12 @@ namespace API.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
+        private ICacheService _cacheService;
         
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, ICacheService cacheService)
         {
             _userService = userService;
+            _cacheService = cacheService;
         }
         
         /// <summary>
@@ -31,7 +34,15 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            if (_cacheService.Any("users"))
+            {
+                var user = _cacheService.Get<List<User>>("users");
+                return Ok(user);
+            }
             var users = _userService.GetAll();
+            _cacheService.Add("users", users);
+
+            //var users = _userService.GetAll();
             return Ok(users); //200 + data
         }
         /// <summary>

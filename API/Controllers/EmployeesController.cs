@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using API.Redis;
+using Business.Abstract;
 using Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +18,13 @@ namespace API.Controllers
     public class EmployeesController : ControllerBase
     {
         private IEmployeeService _employeeService;
-        private readonly IDistributedCache _distributedCache;
-        //private readonly ICacheService _cacheService;
-        public EmployeesController(IEmployeeService employeeService, /*ICacheService cacheService,*/ IDistributedCache distributedCache)
+        //private readonly IDistributedCache _distributedCache;
+        private ICacheService _cacheService;
+        public EmployeesController(IEmployeeService employeeService,ICacheService cacheService /*IDistributedCache distributedCache*/)
         {
             _employeeService = employeeService;
-            _distributedCache = distributedCache;
-            //_cacheService = cacheService;
+            //_distributedCache = distributedCache;
+            _cacheService = cacheService;
         }
         /// <summary>
         /// Get All Employees
@@ -32,8 +33,17 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            if (_cacheService.Any("employees"))
+            {
+                
+                var employee = _cacheService.Get<List<Employee>>("employees");
+                
+                return Ok(employee);
+            }
             var employees = _employeeService.GetAll();
-            return Ok(employees); //200 + data
+            _cacheService.Add("employees", employees);
+
+            return Ok(employees);
         }
         
         /// <summary>
@@ -67,28 +77,37 @@ namespace API.Controllers
         [HttpGet("getallchildbyparent")]
         public IActionResult GetAllChildByParent(int id)
         {
-            var cacheKey = "getallchildbyparent";
-            string serializedEmployeeList;
-            var employees = new List<Employee>();
-            var redisEmployeeList = _distributedCache.Get(cacheKey);
-            if (redisEmployeeList != null)
-            {
-                serializedEmployeeList = Encoding.UTF8.GetString(redisEmployeeList);
-                employees = JsonConvert.DeserializeObject<List<Employee>>(serializedEmployeeList);
-            }
-            else
-            {
-                employees = _employeeService.GetAllChildByParent(id);
-                serializedEmployeeList = JsonConvert.SerializeObject(employees);
-                redisEmployeeList = Encoding.UTF8.GetBytes(serializedEmployeeList);
-                var options = new DistributedCacheEntryOptions()
-                    .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(2));
-                _distributedCache.SetAsync(cacheKey, redisEmployeeList, options);
-            }
-            return Ok(employees);
-            //var result = _employeeService.GetAllChildByParent(id);
-            //return Ok(result);
+            //if (_cacheService.Any("employees"))
+            //{
+            //    var user = _cacheService.Get<List<User>>("employees");
+            //    return Ok(user);
+            //}
+            //var employees = _employeeService.GetAllChildByParent(id);
+            //_cacheService.Add("employees", employees);
+
+            //return Ok(employees); //200 + data
+            //var cacheKey = "getallchildbyparent";
+            //string serializedEmployeeList;
+            //var employees = new List<Employee>();
+            //var redisEmployeeList = _distributedCache.Get(cacheKey);
+            //if (redisEmployeeList != null)
+            //{
+            //    serializedEmployeeList = Encoding.UTF8.GetString(redisEmployeeList);
+            //    employees = JsonConvert.DeserializeObject<List<Employee>>(serializedEmployeeList);
+            //}
+            //else
+            //{
+            //    employees = _employeeService.GetAllChildByParent(id);
+            //    serializedEmployeeList = JsonConvert.SerializeObject(employees);
+            //    redisEmployeeList = Encoding.UTF8.GetBytes(serializedEmployeeList);
+            //    var options = new DistributedCacheEntryOptions()
+            //        .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
+            //        .SetSlidingExpiration(TimeSpan.FromMinutes(2));
+            //    _distributedCache.SetAsync(cacheKey, redisEmployeeList, options);
+            //}
+            //return Ok(employees);
+            var result = _employeeService.GetAllChildByParent(id);
+            return Ok(result);
         }
 
         /// <summary>

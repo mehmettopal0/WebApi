@@ -6,9 +6,11 @@ using Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -19,9 +21,13 @@ namespace API.Controllers
     public class ProductsController : ControllerBase
     {
         private IProductService _productService;
-        public ProductsController(IProductService productService)
+        //private IConnectionMultiplexer _redisCache;
+        //private IDatabase _db;
+        public ProductsController(IProductService productService/*, IConnectionMultiplexer redisCache*/)
         {
             _productService = productService;
+            //_redisCache = redisCache;
+            //_db = _redisCache.GetDatabase();
         }
 
         /// <summary>
@@ -55,8 +61,19 @@ namespace API.Controllers
         // [Route("getProductById/{id}")] => api/products/getProductById/2
         public IActionResult Get(int id)
         {
-            var products = _productService.GetById(id);
-            return Ok(products.Data); //200 + data
+            //var cachedId = _db.StringGet(id.ToString());
+            //if (cachedId.HasValue)
+            //{
+            //    return (IActionResult)JsonSerializer.Deserialize<Product>(cachedId);
+            //}
+            //else
+            //{
+               var products = _productService.GetById(id);
+            //    if (products != null)
+            //        _db.StringSetAsync(id.ToString(), JsonSerializer.Serialize(products));
+               return Ok(products.Data); //200 + data
+            //}
+            
             
             
         }

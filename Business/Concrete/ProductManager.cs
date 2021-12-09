@@ -4,10 +4,12 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Business.Concrete
@@ -15,10 +17,15 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal;
-        public ProductManager(IProductDal productDal)
+        //private IConnectionMultiplexer _redis;
+        //private IDatabase _db;
+        public ProductManager(IProductDal productDal/*,IConnectionMultiplexer redis*/)
         {
             _productDal = productDal;
+            //_redis = redis;
+            //_db = _redis.GetDatabase();
         }
+        
         public IResult Add(Product entity)
         {
             if (entity.ProductName.Length<2)
@@ -60,7 +67,19 @@ namespace Business.Concrete
 
         public IDataResult<Product> GetById(int id)
         {
-            return new SuccessDataResult<Product>(_productDal.GetById(id));
+            //var cachedId = _db.StringGet(id.ToString());
+            //if (cachedId.HasValue)
+            //{
+            //    return (IDataResult<Product>)JsonSerializer.Deserialize<Product>(cachedId);
+            //}
+            //else
+            //{
+                var products = _productDal.GetById(id);
+            //    if (products != null)
+            //        _db.StringSetAsync(id.ToString(), JsonSerializer.Serialize(products));
+                return new SuccessDataResult<Product>(products); //200 + data
+            //}                                                              //}
+
         }
 
         public IResult Update(Product entity)
