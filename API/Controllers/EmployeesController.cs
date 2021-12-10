@@ -33,20 +33,10 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            if (_cacheService.Any("employees"))
+            if (_cacheService.Any("employees") )
             {
-                var employee1 = _employeeService.GetAll();
                 var employee = _cacheService.Get<List<Employee>>("employees");
-                if (employee1 == employee)
-                {
-                    return Ok(employee);
-                }
-                else
-                {
-                    employee = employee1;
-                    return Ok(employee);
-                }
-                
+                return Ok(employee);
             }
             var employees = _employeeService.GetAll();
             _cacheService.Add("employees", employees);
