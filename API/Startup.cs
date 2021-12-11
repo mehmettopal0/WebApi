@@ -41,6 +41,7 @@ namespace API
             services.AddMemoryCache();
             services.AddSingleton<RedisServer>();
             services.AddSingleton<ICacheService, RedisCacheService>();
+            
 
             //services.AddSingleton<ICacheService, RedisCacheService>();
 

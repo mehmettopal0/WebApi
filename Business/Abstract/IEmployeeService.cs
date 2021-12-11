@@ -17,6 +17,6 @@ namespace Business.Abstract
         IResult Add(Employee entity);
         IResult AddTree(Employee entity);
         void Update(Employee entity);
-        void Delete(int id);
+        void TreeDelete(int id);
     }
 }

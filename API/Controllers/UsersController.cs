@@ -70,6 +70,8 @@ namespace API.Controllers
          public IActionResult Post([FromBody] User user)
         {
             _userService.Add(user);
+            var users = _userService.GetAll();
+            _cacheService.Add("users", users);
             return Ok("Ekleme işlemi başarılı...Eklenen kişi: "+user.Name); //201 + data
           
         }

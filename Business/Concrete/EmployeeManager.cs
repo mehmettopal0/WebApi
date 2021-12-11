@@ -31,9 +31,9 @@ namespace Business.Concrete
             return _employeeDal.AddTree(entity);
         }
 
-        public void Delete(int id)
+        public void TreeDelete(int id)
         {
-            _employeeDal.Delete(id);
+            _employeeDal.TreeDelete(id);
         }
 
         public List<Employee> GetAll()

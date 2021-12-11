@@ -13,5 +13,6 @@ namespace DataAccess.Abstract
     {
         List<Employee> GetAllChildByParent(int parentId);
         IResult AddTree(Employee entity);
+        void TreeDelete(int id);
     }
 }
