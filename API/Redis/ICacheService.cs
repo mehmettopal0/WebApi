@@ -10,7 +10,7 @@ namespace API.Redis
         T Get<T>(string key);
         void Add(string key, object data);
         void Remove(string key);
-        void CacheUpdate();
+        void Clear();
         bool Any(string key);
     }
 }

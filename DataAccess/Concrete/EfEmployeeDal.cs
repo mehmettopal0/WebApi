@@ -25,9 +25,17 @@ namespace DataAccess.Concrete
                     var addedEntity = context.Entry(entity);
                     addedEntity.State = EntityState.Added;
                     context.SaveChanges();
-                    foreach (var emp in employee)
+                    if (entity.ChildId != null)
                     {
-                        emp.ParentId = entity.Id;
+                        var emlChild = context.Employees.FirstOrDefault(em => em.Id == entity.ChildId);
+                        emlChild.ParentId = entity.Id;
+                    }
+                    else
+                    {
+                        foreach (var emp in employee)
+                        {
+                            emp.ParentId = entity.Id;
+                        }
                     }
                     context.SaveChanges();
                     return new SuccessResult();

@@ -117,7 +117,7 @@ namespace API.Controllers
         public IActionResult Post([FromBody] Employee employee)
         {
             var result = _employeeService.Add(employee);
-            _cacheService.CacheUpdate();
+            _cacheService.Remove("employees");
             return Ok(result); //201 + data
 
         }
@@ -130,7 +130,7 @@ namespace API.Controllers
         public IActionResult PostEmployeeTree([FromBody] Employee employee)
         {
             var result=_employeeService.AddTree(employee);
-            _cacheService.CacheUpdate();
+            _cacheService.Remove("employees");
             return Ok(result); //201 + data
 
         }
@@ -145,7 +145,7 @@ namespace API.Controllers
             if (_employeeService.GetById(employee.Id) != null)
             {
                 _employeeService.Update(employee);
-                _cacheService.CacheUpdate();
+                _cacheService.Remove("employees");
                 return Ok(employee.Name + " adlı kullanıcının bilgileri başarılı bir şekilde güncellendi.");
             }
             return NotFound("Başarısız!!!!");
@@ -161,7 +161,7 @@ namespace API.Controllers
             if (_employeeService.GetById(id) != null)
             {
                 _employeeService.TreeDelete(id);
-                _cacheService.CacheUpdate();
+                _cacheService.Remove("employees");
                 return Ok("Kişi silme işlemi başarılı..");
             }
             return NotFound("Böyle bir kişi bulunamadı!!!");

@@ -51,12 +51,10 @@ namespace API.Redis
 
         }
 
-        public void CacheUpdate()
+        public void Clear()
         {
-            //_redisServer.FlushDatabase();
+            _redisServer.FlushDatabase();
             
-            var employees = _employeeService.GetAll();
-            Add("employees", employees);
         }
     }
 }
