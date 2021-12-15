@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities;
+using Entities.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,11 @@ namespace Business.Mapper
     {
         public AutoMapperProfile()
         {
-           // CreateMap<Employee, EmployeeRequestDto>();
+           CreateMap<Employee, EmployeeRequestDto>().ReverseMap();
+            CreateMap<Employee, EmployeeDto>().ForMember(dest => dest.Child, opt =>
+               {
+                   opt.MapFrom(src => src.SubChild);
+               });
         }
     }
 }

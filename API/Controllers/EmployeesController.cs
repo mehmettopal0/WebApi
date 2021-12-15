@@ -1,6 +1,8 @@
 ﻿using API.Redis;
+using AutoMapper;
 using Business.Abstract;
 using Entities;
+using Entities.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -18,11 +20,13 @@ namespace API.Controllers
     public class EmployeesController : ControllerBase
     {
         private IEmployeeService _employeeService;
+        private readonly IMapper _mapper;
         //private readonly IDistributedCache _distributedCache;
         //private ICacheService _cacheService;
-        public EmployeesController(IEmployeeService employeeService /*,ICacheService cacheService IDistributedCache distributedCache*/)
+        public EmployeesController(IEmployeeService employeeService,IMapper mapper /*,ICacheService cacheService IDistributedCache distributedCache*/)
         {
             _employeeService = employeeService;
+            _mapper = mapper;
             //_distributedCache = distributedCache;
             //_cacheService = cacheService;
         }
@@ -39,9 +43,10 @@ namespace API.Controllers
             //    return Ok(employee);
             //}
             var employees = _employeeService.GetAll();
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
             //_cacheService.Add("employees", employees);
 
-            return Ok(employees);
+            return Ok(employeesDto);
         }
         
         /// <summary>
@@ -55,7 +60,6 @@ namespace API.Controllers
             var employees = _employeeService.GetById(id);
             return Ok(employees); //200 + data
         }
-
         /// <summary>
         /// getbyparent
         /// </summary>
@@ -114,12 +118,12 @@ namespace API.Controllers
         /// <param name="employee"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Post([FromBody] Employee employee)
+        public IActionResult Post([FromBody] EmployeeRequestDto employeeRequestDto)
         {
+            var employee = _mapper.Map<Employee>(employeeRequestDto);
             var result = _employeeService.Add(employee);
             //_cacheService.Remove("employees");
             return Ok(result); //201 + data
-
         }
         /// <summary>
         /// Create an Employees
@@ -127,8 +131,9 @@ namespace API.Controllers
         /// <param name="employee"></param>
         /// <returns></returns>
         [HttpPost("addtree")]
-        public IActionResult PostEmployeeTree([FromBody] Employee employee)
+        public IActionResult PostEmployeeTree([FromBody] EmployeeRequestDto employeeRequestDto)
         {
+            var employee = _mapper.Map<Employee>(employeeRequestDto);
             var result=_employeeService.AddTree(employee);
            // _cacheService.Remove("employees");
             return Ok(result); //201 + data

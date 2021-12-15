@@ -1,6 +1,7 @@
 ﻿using Core.DataAccess;
 using Core.Utilities.Results;
 using Entities;
+using Entities.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;

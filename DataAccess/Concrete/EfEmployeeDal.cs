@@ -2,6 +2,7 @@
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities;
+using Entities.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace DataAccess.Concrete
 {
     public class EfEmployeeDal : EfEntityRepositoryBase<Employee, WebApiDbContext>, IEmployeeDal
     {
-        
         public IResult AddTree(Employee entity)
         {
+            
             using (WebApiDbContext context = new WebApiDbContext())
             {
                 List<Employee> employee = context.Employees.Where(x => x.ParentId == entity.ParentId).ToList();
