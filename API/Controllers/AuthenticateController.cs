@@ -1,5 +1,7 @@
 ﻿using API.Authentication;
+using AutoMapper;
 using Entities;
+using Entities.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +18,11 @@ namespace API.Controllers
     public class AuthenticateController : ControllerBase
     {
         private readonly IJWTAuthenticationManager jwtAuthenticationManager;
-        public AuthenticateController(IJWTAuthenticationManager jwtAuthenticationManager)
+        private readonly IMapper _mapper;
+        public AuthenticateController(IJWTAuthenticationManager jwtAuthenticationManager, IMapper mapper)
         {
             this.jwtAuthenticationManager = jwtAuthenticationManager;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -28,9 +32,10 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Authentication([FromBody] AutPersonCredential autPersonCredential)
+        public IActionResult Authentication([FromBody] UserLoginDto userloginDto)
         {
-            var token = jwtAuthenticationManager.Authenticate(autPersonCredential.UserName, autPersonCredential.Password);
+            var user=_mapper.Map<User>(userloginDto);
+            var token = jwtAuthenticationManager.Authenticate(user.Name, user.Phone);
             if (token == null)
             {
                 return Unauthorized();

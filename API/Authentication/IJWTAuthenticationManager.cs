@@ -8,5 +8,6 @@ namespace API.Authentication
     public interface IJWTAuthenticationManager
     {
         string Authenticate(string userName, string password);
+        
     }
 }

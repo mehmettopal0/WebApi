@@ -13,11 +13,12 @@ namespace Business.Mapper
     {
         public AutoMapperProfile()
         {
-           CreateMap<Employee, EmployeeRequestDto>().ReverseMap();
+            CreateMap<Employee, EmployeeRequestDto>().ReverseMap();
             CreateMap<Employee, EmployeeDto>().ForMember(dest => dest.Child, opt =>
                {
                    opt.MapFrom(src => src.SubChild);
                });
+            CreateMap<User, UserLoginDto>().ReverseMap();
         }
     }
 }
