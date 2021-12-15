@@ -12,7 +12,7 @@ namespace Business.Mapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<Employee, EmployeeRequestDto>();
+           // CreateMap<Employee, EmployeeRequestDto>();
         }
     }
 }
