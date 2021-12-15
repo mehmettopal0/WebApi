@@ -2,6 +2,7 @@
 using API.Redis;
 using Business.Abstract;
 using Business.Concrete;
+using Business.Mapper;
 using DataAccess;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
@@ -36,12 +37,14 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
 
             services.AddControllers();
             services.AddMemoryCache();
             services.AddSingleton<RedisServer>();
             services.AddSingleton<ICacheService, RedisCacheService>();
-            
+
+            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             //services.AddSingleton<ICacheService, RedisCacheService>();
 

@@ -1,5 +1,7 @@
-﻿using Business.Abstract;
+﻿using API.Redis;
+using Business.Abstract;
 using Business.Constants;
+using Business.Enumarations;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
@@ -19,9 +21,11 @@ namespace Business.Concrete
         IProductDal _productDal;
         //private IConnectionMultiplexer _redis;
         //private IDatabase _db;
-        public ProductManager(IProductDal productDal/*,IConnectionMultiplexer redis*/)
+        private ICacheService _cacheService; 
+        public ProductManager(IProductDal productDal, ICacheService cacheService/*,IConnectionMultiplexer redis*/)
         {
             _productDal = productDal;
+            _cacheService = cacheService;
             //_redis = redis;
             //_db = _redis.GetDatabase();
         }
@@ -33,29 +37,27 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ProductNameInvalid);
             }
             _productDal.Add(entity);
+            _cacheService.Remove(CacheEnum.Products);
             return new SuccessResult(Messages.ProductAdded);
         }
 
         public IResult Delete(int id)
         {
-            var mehmet = _productDal.GetById(id);
-            if (mehmet.ProductPrice<5000)
-            {
                 _productDal.Delete(id);
+                _cacheService.Remove(CacheEnum.Products);
                 return  new SuccessResult(Messages.ProductDeleted);
-                
-
-            }
-            return new ErrorResult(Messages.ProductNotDeletable);
         }
 
         public IDataResult<List<Product>> GetAll()
         {
-            if (DateTime.Now.Hour==23)
+            if (_cacheService.Any(CacheEnum.Products))
             {
-                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+                var product = _cacheService.Get<List<Product>>(CacheEnum.Products);
+                return new SuccessDataResult<List<Product>>(product, Messages.ProductsListed);
             }
-            return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
+            var products = _productDal.GetAll();
+            _cacheService.Add(CacheEnum.Products, products);
+            return new SuccessDataResult<List<Product>>(products, Messages.ProductsListed);
         }
 
         
@@ -89,6 +91,7 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ProductNameInvalid);
             }
             _productDal.Update(entity);
+            _cacheService.Remove(CacheEnum.Products);
             return new SuccessResult(Messages.ProductUpdated);
         }
     }

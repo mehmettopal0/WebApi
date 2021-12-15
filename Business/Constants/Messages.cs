@@ -19,4 +19,5 @@ namespace Business.Constants
         public static string ParentIDCannotBeLessThanZero = "ParentId 0 dan küçük olamaz!!";
         //bu branch için deneme yorumudur.
     }
+     
 }

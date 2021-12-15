@@ -1,4 +1,6 @@
-﻿using Business.Abstract;
+﻿using API.Redis;
+using Business.Abstract;
+using Business.Enumarations;
 using Core.Utilities.Results;
 using DataAccess;
 using DataAccess.Abstract;
@@ -14,13 +16,16 @@ namespace Business.Concrete
     public class EmployeeManager : IEmployeeService
     {
         IEmployeeDal _employeeDal;
-        public EmployeeManager(IEmployeeDal employeeDal)
+        private ICacheService _cacheService;
+        public EmployeeManager(IEmployeeDal employeeDal, ICacheService cacheService)
         {
             _employeeDal = employeeDal;
+            _cacheService = cacheService;
         }
         public IResult Add(Employee entity)
         {
             _employeeDal.Add(entity);
+            _cacheService.Remove(CacheEnum.Employees);
             return  new SuccessResult(); 
 
 
@@ -28,18 +33,28 @@ namespace Business.Concrete
         }
         public IResult AddTree(Employee entity)
         {
-            return _employeeDal.AddTree(entity);
+            _employeeDal.AddTree(entity);
+            _cacheService.Remove(CacheEnum.Employees);
+            return new SuccessResult();
         }
 
         public void TreeDelete(int id)
         {
+            
             _employeeDal.TreeDelete(id);
+            _cacheService.Remove(CacheEnum.Employees);
         }
 
         public List<Employee> GetAll()
         {
-
-            return _employeeDal.GetAll();
+            if (_cacheService.Any(CacheEnum.Employees))
+            {
+                var employee = _cacheService.Get<List<Employee>>(CacheEnum.Employees);
+                return employee;
+            }
+            var employees = _employeeDal.GetAll();
+            _cacheService.Add(CacheEnum.Employees, employees);
+            return employees;
             
         }
 
@@ -60,9 +75,11 @@ namespace Business.Concrete
 
         public void Update(Employee entity)
         {
+            
             _employeeDal.Update(entity);
+            _cacheService.Remove(CacheEnum.Employees);
         }
 
-        
+
     }
 }

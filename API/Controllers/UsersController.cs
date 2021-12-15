@@ -19,12 +19,12 @@ namespace API.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
-        private ICacheService _cacheService;
+        //private ICacheService _cacheService;
         
-        public UsersController(IUserService userService, ICacheService cacheService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
-            _cacheService = cacheService;
+            //_cacheService = cacheService;
         }
         
         /// <summary>
@@ -34,13 +34,13 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            if (_cacheService.Any("users"))
-            {
-                var user = _cacheService.Get<List<User>>("users");
-                return Ok(user);
-            }
+            //if (_cacheService.Any("users"))
+            //{
+            //    var user = _cacheService.Get<List<User>>("users");
+            //    return Ok(user);
+            //}
             var users = _userService.GetAll();
-            _cacheService.Add("users", users);
+            //_cacheService.Add("users", users);
 
             //var users = _userService.GetAll();
             return Ok(users); //200 + data
@@ -70,8 +70,8 @@ namespace API.Controllers
          public IActionResult Post([FromBody] User user)
         {
             _userService.Add(user);
-            var users = _userService.GetAll();
-            _cacheService.Add("users", users);
+            //var users = _userService.GetAll();
+            //_cacheService.Add("users", users);
             return Ok("Ekleme işlemi başarılı...Eklenen kişi: "+user.Name); //201 + data
           
         }

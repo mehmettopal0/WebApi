@@ -19,12 +19,12 @@ namespace API.Controllers
     {
         private IEmployeeService _employeeService;
         //private readonly IDistributedCache _distributedCache;
-        private ICacheService _cacheService;
-        public EmployeesController(IEmployeeService employeeService,ICacheService cacheService /*IDistributedCache distributedCache*/)
+        //private ICacheService _cacheService;
+        public EmployeesController(IEmployeeService employeeService /*,ICacheService cacheService IDistributedCache distributedCache*/)
         {
             _employeeService = employeeService;
             //_distributedCache = distributedCache;
-            _cacheService = cacheService;
+            //_cacheService = cacheService;
         }
         /// <summary>
         /// Get All Employees
@@ -33,13 +33,13 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            if (_cacheService.Any("employees") )
-            {
-                var employee = _cacheService.Get<List<Employee>>("employees");
-                return Ok(employee);
-            }
+            //if (_cacheService.Any("employees") )
+            //{
+            //    var employee = _cacheService.Get<List<Employee>>("employees");
+            //    return Ok(employee);
+            //}
             var employees = _employeeService.GetAll();
-            _cacheService.Add("employees", employees);
+            //_cacheService.Add("employees", employees);
 
             return Ok(employees);
         }
@@ -117,7 +117,7 @@ namespace API.Controllers
         public IActionResult Post([FromBody] Employee employee)
         {
             var result = _employeeService.Add(employee);
-            _cacheService.Remove("employees");
+            //_cacheService.Remove("employees");
             return Ok(result); //201 + data
 
         }
@@ -130,7 +130,7 @@ namespace API.Controllers
         public IActionResult PostEmployeeTree([FromBody] Employee employee)
         {
             var result=_employeeService.AddTree(employee);
-            _cacheService.Remove("employees");
+           // _cacheService.Remove("employees");
             return Ok(result); //201 + data
 
         }
@@ -145,7 +145,7 @@ namespace API.Controllers
             if (_employeeService.GetById(employee.Id) != null)
             {
                 _employeeService.Update(employee);
-                _cacheService.Remove("employees");
+               // _cacheService.Remove("employees");
                 return Ok(employee.Name + " adlı kullanıcının bilgileri başarılı bir şekilde güncellendi.");
             }
             return NotFound("Başarısız!!!!");
@@ -161,7 +161,7 @@ namespace API.Controllers
             if (_employeeService.GetById(id) != null)
             {
                 _employeeService.TreeDelete(id);
-                _cacheService.Remove("employees");
+                //_cacheService.Remove("employees");
                 return Ok("Kişi silme işlemi başarılı..");
             }
             return NotFound("Böyle bir kişi bulunamadı!!!");

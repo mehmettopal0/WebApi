@@ -21,15 +21,15 @@ namespace API.Controllers
     public class CategoriesController : ControllerBase
     {
         private ICategoryService _categoryService;
-        private readonly IDistributedCache _distributedCache;
-        private readonly IMemoryCache _memoryCache;
+        //private readonly IDistributedCache _distributedCache;
+        //private readonly IMemoryCache _memoryCache;
         //private readonly ICacheService _cacheService;
 
-        public CategoriesController(ICategoryService categoryService, /*ICacheService cacheService, */IMemoryCache memoryCache, IDistributedCache distributedCache)
+        public CategoriesController(ICategoryService categoryService /*, ICacheService cacheService, IMemoryCache memoryCache, IDistributedCache distributedCache*/)
         {
             _categoryService = categoryService;
-            _distributedCache = distributedCache;
-            _memoryCache = memoryCache;
+            //_distributedCache = distributedCache;
+            //_memoryCache = memoryCache;
             //_cacheService = cacheService;
         }
         /// <summary>
@@ -54,25 +54,25 @@ namespace API.Controllers
             //    _memoryCache.Set(cacheKey, categories, cacheExprationOptions);
             //}
             //return Ok(categories);
-            var cacheKey = "categories";
-            string serializedCategoryList;
-            var categories = new List<Category>();
-            var redisCategoryList = _distributedCache.Get(cacheKey);
-            if (redisCategoryList != null)
-            {
-                serializedCategoryList = Encoding.UTF8.GetString(redisCategoryList);
-                categories = JsonConvert.DeserializeObject<List<Category>>(serializedCategoryList);
-            }
-            else
-            {
-                categories = _categoryService.GetAll();
-                serializedCategoryList = JsonConvert.SerializeObject(categories);
-                redisCategoryList = Encoding.UTF8.GetBytes(serializedCategoryList);
-                var options = new DistributedCacheEntryOptions()
-                    .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(2));
-                _distributedCache.SetAsync(cacheKey, redisCategoryList, options);
-            }
+            //var cacheKey = "categories";
+            //string serializedCategoryList;
+            //var categories = new List<Category>();
+            //var redisCategoryList = _distributedCache.Get(cacheKey);
+            //if (redisCategoryList != null)
+            //{
+            //    serializedCategoryList = Encoding.UTF8.GetString(redisCategoryList);
+            //    categories = JsonConvert.DeserializeObject<List<Category>>(serializedCategoryList);
+            //}
+            //else
+            //{
+            var categories = _categoryService.GetAll();
+            //    serializedCategoryList = JsonConvert.SerializeObject(categories);
+            //    redisCategoryList = Encoding.UTF8.GetBytes(serializedCategoryList);
+            //    var options = new DistributedCacheEntryOptions()
+            //        .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
+            //        .SetSlidingExpiration(TimeSpan.FromMinutes(2));
+            //    _distributedCache.SetAsync(cacheKey, redisCategoryList, options);
+            //}
             return Ok(categories);
             //    var categories = _categoryService.GetAll();
             //return Ok(categories); //200 + data
