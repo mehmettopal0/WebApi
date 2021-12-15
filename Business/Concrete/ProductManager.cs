@@ -21,7 +21,8 @@ namespace Business.Concrete
         IProductDal _productDal;
         //private IConnectionMultiplexer _redis;
         //private IDatabase _db;
-        private ICacheService _cacheService; 
+        private ICacheService _cacheService;
+        public int productCacheCount = 0;
         public ProductManager(IProductDal productDal, ICacheService cacheService/*,IConnectionMultiplexer redis*/)
         {
             _productDal = productDal;
@@ -37,14 +38,16 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ProductNameInvalid);
             }
             _productDal.Add(entity);
-            _cacheService.Remove(CacheEnum.Products);
+            productCacheCount++;
+            //_cacheService.Remove(CacheEnum.Products);
             return new SuccessResult(Messages.ProductAdded);
         }
 
         public IResult Delete(int id)
         {
                 _productDal.Delete(id);
-                _cacheService.Remove(CacheEnum.Products);
+                productCacheCount++;
+                //_cacheService.Remove(CacheEnum.Products);
                 return  new SuccessResult(Messages.ProductDeleted);
         }
 
@@ -52,8 +55,13 @@ namespace Business.Concrete
         {
             if (_cacheService.Any(CacheEnum.Products))
             {
-                var product = _cacheService.Get<List<Product>>(CacheEnum.Products);
-                return new SuccessDataResult<List<Product>>(product, Messages.ProductsListed);
+                if (productCacheCount == 0)
+                {
+                    var product = _cacheService.Get<List<Product>>(CacheEnum.Products);
+                    return new SuccessDataResult<List<Product>>(product, Messages.ProductsListed);
+                }
+                _cacheService.Remove(CacheEnum.Products);
+                productCacheCount = 0;
             }
             var products = _productDal.GetAll();
             _cacheService.Add(CacheEnum.Products, products);
@@ -91,7 +99,8 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ProductNameInvalid);
             }
             _productDal.Update(entity);
-            _cacheService.Remove(CacheEnum.Products);
+            productCacheCount++;
+            //_cacheService.Remove(CacheEnum.Products);
             return new SuccessResult(Messages.ProductUpdated);
         }
     }

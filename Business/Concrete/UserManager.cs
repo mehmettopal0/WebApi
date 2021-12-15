@@ -16,6 +16,7 @@ namespace Business.Concrete
     {
         IUserDal _userDal;
         private ICacheService _cacheService;
+        public int userCacheCount = 0;
         public UserManager(IUserDal userDal, ICacheService cacheService)
         {
             _userDal = userDal;
@@ -24,21 +25,28 @@ namespace Business.Concrete
         public void Add(User entity)
         {
             _userDal.Add(entity);
-            _cacheService.Remove(CacheEnum.Users);
+            userCacheCount++;
+            //_cacheService.Remove(CacheEnum.Users);
         }
 
         public void Delete(int id)
         {
             _userDal.Delete(id);
-            _cacheService.Remove(CacheEnum.Users);
+            userCacheCount++;
+            //_cacheService.Remove(CacheEnum.Users);
         }
 
         public List<User> GetAll()
         {
             if (_cacheService.Any(CacheEnum.Users))
             {
-                var user = _cacheService.Get<List<User>>(CacheEnum.Users);
-                return user;
+                if (userCacheCount == 0)
+                {
+                    var user = _cacheService.Get<List<User>>(CacheEnum.Users);
+                    return user;
+                }
+                _cacheService.Remove(CacheEnum.Users);
+                userCacheCount = 0;
             }
             var users = _userDal.GetAll();
             _cacheService.Add(CacheEnum.Users, users);
@@ -53,7 +61,8 @@ namespace Business.Concrete
         public void Update(User entity)
         {
             _userDal.Update(entity);
-            _cacheService.Remove(CacheEnum.Users);
+            userCacheCount++;
+            //_cacheService.Remove(CacheEnum.Users);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace API.Authentication
         {
             using (WebApiDbContext context = new WebApiDbContext())
             {
-                User autperson = context.Users.FirstOrDefault(c => c.Name == userName);
+                User autperson = context.Users.FirstOrDefault(c => c.Name == userName);     
 
                 if (autperson != null)
                 {

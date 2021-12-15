@@ -145,8 +145,9 @@ namespace API.Controllers
             /// <param name="employee"></param>
             /// <returns></returns>
             [HttpPut]
-        public IActionResult Put([FromBody] Employee employee)
+        public IActionResult Put([FromBody] EmployeeUpdateRequestDto employeeUpdateRequestDto)
         {
+            var employee = _mapper.Map<Employee>(employeeUpdateRequestDto);
             if (_employeeService.GetById(employee.Id) != null)
             {
                 _employeeService.Update(employee);

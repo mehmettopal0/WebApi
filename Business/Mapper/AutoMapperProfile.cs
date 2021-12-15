@@ -14,6 +14,7 @@ namespace Business.Mapper
         public AutoMapperProfile()
         {
             CreateMap<Employee, EmployeeRequestDto>().ReverseMap();
+            CreateMap<Employee, EmployeeUpdateRequestDto>().ReverseMap();
             CreateMap<Employee, EmployeeDto>().ForMember(dest => dest.Child, opt =>
                {
                    opt.MapFrom(src => src.SubChild);

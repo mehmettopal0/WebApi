@@ -16,6 +16,7 @@ namespace Business.Concrete
     {
         ICategoryDal _categoryDal;
         private ICacheService _cacheService;
+        public int categoryCacheCount = 0;
 
         public CategoryManager(ICategoryDal categoryDal,ICacheService cacheService )
         {
@@ -26,13 +27,15 @@ namespace Business.Concrete
         public void Add(Category entity)
         {
             _categoryDal.Add(entity);
-            _cacheService.Remove(CacheEnum.Categories);
+            categoryCacheCount++;
+            //_cacheService.Remove(CacheEnum.Categories);
         }
 
         public void Delete(int id)
         {
             _categoryDal.Delete(id);
-            _cacheService.Remove(CacheEnum.Categories);
+            categoryCacheCount++;
+            //_cacheService.Remove(CacheEnum.Categories);
         }
 
 
@@ -40,8 +43,13 @@ namespace Business.Concrete
         {
             if (_cacheService.Any(CacheEnum.Categories))
             {
-                var category = _cacheService.Get<List<Category>>(CacheEnum.Categories);
-                return category;
+                if (categoryCacheCount == 0)
+                {
+                    var category = _cacheService.Get<List<Category>>(CacheEnum.Categories);
+                    return category;
+                }
+                _cacheService.Remove(CacheEnum.Categories);
+                categoryCacheCount = 0;
             }
             var categories = _categoryDal.GetAll();
             _cacheService.Add(CacheEnum.Categories, categories);
@@ -57,7 +65,8 @@ namespace Business.Concrete
         public void Update(Category entity)
         {
             _categoryDal.Update(entity);
-            _cacheService.Remove(CacheEnum.Categories);
+            categoryCacheCount++;
+            //_cacheService.Remove(CacheEnum.Categories);
         }
 
         
