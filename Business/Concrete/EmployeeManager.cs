@@ -17,19 +17,33 @@ namespace Business.Concrete
     {
         IEmployeeDal _employeeDal;
         private ICacheService _cacheService;
-        public int employeeCacheCount = 0;
-        public EmployeeManager(IEmployeeDal employeeDal, ICacheService cacheService)
+        //private WebApiDbContext _context;
+        private readonly WebApiDbContext _context;
+        
+        public EmployeeManager(IEmployeeDal employeeDal, ICacheService cacheService, WebApiDbContext context)
         {
             _employeeDal = employeeDal;
             _cacheService = cacheService;
+            _context = context;
             
         }
+        public int employeeCacheCount;
         public IResult Add(Employee entity)
         {
-            _employeeDal.Add(entity);
-            employeeCacheCount++;
-            //_cacheService.Remove(CacheEnum.Employees);
-            return  new SuccessResult(); 
+            //using (WebApiDbContext context=new WebApiDbContext())
+            //{
+                var empl = _context.Employees.FirstOrDefault(e => e.Id == entity.ParentId);
+                if (empl != null || entity.ParentId == null)
+                {
+                    _employeeDal.Add(entity);
+                    employeeCacheCount++;
+                    _cacheService.Remove(CacheEnum.Employees);
+                    return new SuccessResult();
+                }
+                return new ErrorResult();
+            //}
+            
+                
 
 
             
@@ -38,7 +52,7 @@ namespace Business.Concrete
         {
             _employeeDal.AddTree(entity);
             employeeCacheCount++;
-            //_cacheService.Remove(CacheEnum.Employees);
+            _cacheService.Remove(CacheEnum.Employees);
             return new SuccessResult();
         }
 
@@ -47,14 +61,15 @@ namespace Business.Concrete
             
             _employeeDal.TreeDelete(id);
             employeeCacheCount++;
-            //_cacheService.Remove(CacheEnum.Employees);
+            _cacheService.Remove(CacheEnum.Employees);
         }
 
         public List<Employee> GetAll()
         {
+            var count = employeeCacheCount;
             if (_cacheService.Any(CacheEnum.Employees))
             {
-                if (employeeCacheCount == 0)
+                if (count == 0)
                 {
                     var employee = _cacheService.Get<List<Employee>>(CacheEnum.Employees);
                     return employee;
@@ -88,7 +103,7 @@ namespace Business.Concrete
             
             _employeeDal.Update(entity);
             employeeCacheCount++;
-            //_cacheService.Remove(CacheEnum.Employees);
+            _cacheService.Remove(CacheEnum.Employees);
         }
 
 

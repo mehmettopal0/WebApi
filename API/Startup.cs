@@ -37,9 +37,17 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            //services.AddDbContext<WebApiDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
 
             services.AddControllers();
+            //services.AddDbContext<WebApiDbContext>(opt => {
+            //    string connectionString = @"DefaultConnection";
+            //    opt.UseSqlServer(connectionString);
+            //});
+            services.AddDbContext<WebApiDbContext>(options =>
+                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<WebApiDbContext>(
+            //         options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
             services.AddMemoryCache();
             services.AddSingleton<RedisServer>();
             services.AddSingleton<ICacheService, RedisCacheService>();
@@ -54,17 +62,16 @@ namespace API
             });
             services.AddControllers().AddJsonOptions(x =>
                            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
-            //services.AddDbContext<WebApiDbContext>(options =>
-            //         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
 
-            services.AddSingleton<ICategoryService, CategoryManager>();
-            services.AddSingleton<ICategoryDal, EfCategoryDal>();
-            services.AddSingleton<IProductService, ProductManager>();
-            services.AddSingleton<IProductDal, EfProductDal>();
-            services.AddSingleton<IUserService, UserManager>();
-            services.AddSingleton<IUserDal, EfUserDal>();
-            services.AddSingleton<IEmployeeService, EmployeeManager>();
-            services.AddSingleton<IEmployeeDal, EfEmployeeDal>();
+            services.AddScoped<ICategoryService, CategoryManager>();
+            services.AddScoped<ICategoryDal, EfCategoryDal>();
+            services.AddScoped<IProductService, ProductManager>();
+            services.AddScoped<IProductDal, EfProductDal>();
+            services.AddScoped<IUserService, UserManager>();
+            services.AddScoped<IUserDal, EfUserDal>();
+            services.AddScoped<IEmployeeService, EmployeeManager>();
+            services.AddScoped<IEmployeeDal, EfEmployeeDal>();
             
 
             //var multiplexer = ConnectionMultiplexer.Connect(new ConfigurationOptions
@@ -121,7 +128,7 @@ namespace API
 
                 };
             });
-            services.AddSingleton<IJWTAuthenticationManager>(new JWTAuthenticationManager(key));
+            services.AddScoped<IJWTAuthenticationManager,JWTAuthenticationManager>();
 
 
 

@@ -13,12 +13,15 @@ namespace API.Authentication
 {
     class JWTAuthenticationManager : IJWTAuthenticationManager
     {
-        private string _key;
-        public JWTAuthenticationManager(string key)
+        //private string _key;
+        string _key = "Bu hash için oluşturacağım key";
+        private readonly WebApiDbContext _context;
+        public JWTAuthenticationManager(WebApiDbContext context)
         {
-            _key = key;
-
+            _context = context;
         }
+
+        
 
         //private readonly IDictionary<string, string> autperson = new Dictionary<string, string>
         //{
@@ -27,9 +30,9 @@ namespace API.Authentication
 
         public string Authenticate(string userName, string password)
         {
-            using (WebApiDbContext context = new WebApiDbContext())
-            {
-                User autperson = context.Users.FirstOrDefault(c => c.Name == userName);     
+            //using (WebApiDbContext context = new WebApiDbContext())
+            //{
+                User autperson = _context.Users.FirstOrDefault(c => c.Name == userName);     
 
                 if (autperson != null)
                 {
@@ -56,7 +59,7 @@ namespace API.Authentication
                 return null;
 
 
-            }
+           // }
 
 
 

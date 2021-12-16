@@ -1,6 +1,7 @@
 ﻿using Core.DataAccess.EntityFramework;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Repositories;
 using Entities;
 using Entities.Dto;
 using Microsoft.EntityFrameworkCore;
@@ -12,57 +13,59 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete
 {
-    public class EfEmployeeDal : EfEntityRepositoryBase<Employee, WebApiDbContext>, IEmployeeDal
+    public class EfEmployeeDal : GenericRepositoryBase<Employee>, IEmployeeDal
     {
+        public WebApiDbContext _context { get; set; }
+        public EfEmployeeDal(WebApiDbContext context) : base(context)
+        {
+            _context = context;
+        }
         public IResult AddTree(Employee entity)
         {
-            
-            using (WebApiDbContext context = new WebApiDbContext())
+
+            List<Employee> employee = _context.Employees.Where(x => x.ParentId == entity.ParentId).ToList();
+            var empl = _context.Employees.FirstOrDefault(e => e.Id == entity.ParentId);
+            if (empl != null || entity.ParentId == null)
             {
-                List<Employee> employee = context.Employees.Where(x => x.ParentId == entity.ParentId).ToList();
-                var empl = context.Employees.FirstOrDefault(e => e.Id == entity.ParentId);
-                if (empl != null || entity.ParentId==null)
+
+                var addedEntity = _context.Entry(entity);
+                addedEntity.State = EntityState.Added;
+                _context.SaveChanges();
+                if (entity.ChildId != null)
                 {
-                    
-                    var addedEntity = context.Entry(entity);
-                    addedEntity.State = EntityState.Added;
-                    context.SaveChanges();
-                    if (entity.ChildId != null)
-                    {
-                        var emlChild = context.Employees.FirstOrDefault(em => em.Id == entity.ChildId);
-                        emlChild.ParentId = entity.Id;
-                    }
-                    else
-                    {
-                        
-                        foreach (var emp in employee)
-                        {
-                            emp.ParentId = entity.Id;
-                        }
-                    }
-                    context.SaveChanges();
-                    return new SuccessResult();
+                    var emlChild = _context.Employees.FirstOrDefault(em => em.Id == entity.ChildId);
+                    emlChild.ParentId = entity.Id;
                 }
-                return new ErrorResult();
-               
+                else
+                {
+
+                    foreach (var emp in employee)
+                    {
+                        emp.ParentId = entity.Id;
+                    }
+                }
+                _context.SaveChanges();
+                return new SuccessResult();
             }
+            return new ErrorResult();
+
+
         }
         public void TreeDelete(int id)
         {
-            using (WebApiDbContext context = new WebApiDbContext())
-            {
-                Employee empl = context.Employees.FirstOrDefault(x => x.Id == id);
-                List<Employee> employee = context.Employees.Where(x => x.ParentId == empl.Id).ToList();
-                foreach (var emp in employee)
-                {
-                    emp.ParentId = empl.ParentId;
-                }
-                empl.SubChild = null;
-                context.SaveChanges();
-                context.Set<Employee>().Remove(empl);
-                context.SaveChanges();
 
+            Employee empl = _context.Employees.FirstOrDefault(x => x.Id == id);
+            List<Employee> employee = _context.Employees.Where(x => x.ParentId == empl.Id).ToList();
+            foreach (var emp in employee)
+            {
+                emp.ParentId = empl.ParentId;
             }
+            empl.SubChild = null;
+            _context.SaveChanges();
+            _context.Set<Employee>().Remove(empl);
+            _context.SaveChanges();
+
+
         }
 
         public List<Employee> GetAllChildByParent(int parentId)
@@ -72,26 +75,25 @@ namespace DataAccess.Concrete
             return result;
         }
 
-       
+
 
         private void GetChilds(int parentId, ICollection<Employee> listchild)
         {
-            using (WebApiDbContext context = new WebApiDbContext())
+
+
+            var subchild = _context.Employees.Where(p => p.ParentId == parentId).ToList();
+            if (subchild.Any())
             {
-
-                var subchild = context.Employees.Where(p => p.ParentId == parentId).ToList();
-                if (subchild.Any())
+                foreach (var sub in subchild)
                 {
-                    foreach (var sub in subchild)
-                    {
-                        if (sub.SubChild == null)
-                            sub.SubChild = new List<Employee>();
+                    if (sub.SubChild == null)
+                        sub.SubChild = new List<Employee>();
 
-                        GetChilds(sub.Id, sub.SubChild);
-                        listchild.Add(sub);
-                    }
+                    GetChilds(sub.Id, sub.SubChild);
+                    listchild.Add(sub);
                 }
             }
+
         }
     }
 }
