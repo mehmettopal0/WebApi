@@ -51,7 +51,7 @@ namespace API.Redis
 
         public void Clear()
         {
-            _redisServer.FlushDatabase();
+           _redisServer.FlushDatabase();
             
         }
     }

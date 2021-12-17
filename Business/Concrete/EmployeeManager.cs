@@ -1,10 +1,12 @@
 ﻿using API.Redis;
+using AutoMapper;
 using Business.Abstract;
 using Business.Enumarations;
 using Core.Utilities.Results;
 using DataAccess;
 using DataAccess.Abstract;
 using Entities;
+using Entities.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,70 +19,64 @@ namespace Business.Concrete
     {
         IEmployeeDal _employeeDal;
         private ICacheService _cacheService;
-        //private WebApiDbContext _context;
+        private readonly IMapper _mapper;
         private readonly WebApiDbContext _context;
-        
-        public EmployeeManager(IEmployeeDal employeeDal, ICacheService cacheService, WebApiDbContext context)
+
+        public EmployeeManager(IEmployeeDal employeeDal, ICacheService cacheService, WebApiDbContext context, IMapper mapper)
         {
             _employeeDal = employeeDal;
             _cacheService = cacheService;
             _context = context;
-            
+            _mapper = mapper;
+
         }
         public int employeeCacheCount;
-        public IResult Add(Employee entity)
+        public IResult Add(EmployeeRequestDto employeeRequestDto)
         {
-            //using (WebApiDbContext context=new WebApiDbContext())
-            //{
-                var empl = _context.Employees.FirstOrDefault(e => e.Id == entity.ParentId);
-                if (empl != null || entity.ParentId == null)
-                {
-                    _employeeDal.Add(entity);
-                    employeeCacheCount++;
-                    _cacheService.Remove(CacheEnum.Employees);
-                    return new SuccessResult();
-                }
-                return new ErrorResult();
-            //}
             
-                
-
-
+            var employee = _mapper.Map<Employee>(employeeRequestDto);
+            var empl = _context.Employees.FirstOrDefault(e => e.Id == employee.ParentId);
+            if (empl != null || employee.ParentId == null)
+            {
+                _employeeDal.Add(employee);
+                _cacheService.Remove(CacheEnum.Employees);
+                return new SuccessResult();
+            }
+            return new ErrorResult();
             
+
         }
-        public IResult AddTree(Employee entity)
+        public IResult AddTree(EmployeeRequestDto employeeRequestDto)
         {
-            _employeeDal.AddTree(entity);
-            employeeCacheCount++;
+            var employee = _mapper.Map<Employee>(employeeRequestDto);
+            _employeeDal.AddTree(employee);
             _cacheService.Remove(CacheEnum.Employees);
             return new SuccessResult();
         }
 
         public void TreeDelete(int id)
         {
-            
+
             _employeeDal.TreeDelete(id);
-            employeeCacheCount++;
             _cacheService.Remove(CacheEnum.Employees);
         }
 
-        public List<Employee> GetAll()
+        public List<EmployeeDto> GetAll()
         {
-            var count = employeeCacheCount;
+
             if (_cacheService.Any(CacheEnum.Employees))
             {
-                if (count == 0)
-                {
-                    var employee = _cacheService.Get<List<Employee>>(CacheEnum.Employees);
-                    return employee;
-                }
-                _cacheService.Remove(CacheEnum.Employees);
-                employeeCacheCount = 0;
+
+                var employee = _cacheService.Get<List<Employee>>(CacheEnum.Employees);
+                var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employee);
+                return (List<EmployeeDto>) employeesDto;
+
             }
             var employees = _employeeDal.GetAll();
+            var employeesDtos = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
             _cacheService.Add(CacheEnum.Employees, employees);
-            return employees;
-            
+            return (List<EmployeeDto>)employeesDtos;
+
         }
 
         public List<Employee> GetAllChildByParent(int id)
@@ -98,11 +94,10 @@ namespace Business.Concrete
             return _employeeDal.GetAll(p => p.ParentId == id);
         }
 
-        public void Update(Employee entity)
+        public void Update(EmployeeUpdateRequestDto employeeUpdateRequestDto)
         {
-            
-            _employeeDal.Update(entity);
-            employeeCacheCount++;
+            var employee = _mapper.Map<Employee>(employeeUpdateRequestDto);
+            _employeeDal.Update(employee);
             _cacheService.Remove(CacheEnum.Employees);
         }
 

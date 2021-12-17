@@ -13,7 +13,7 @@ namespace Business.Mapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<Employee, EmployeeRequestDto>().ReverseMap();
+            CreateMap<EmployeeRequestDto, Employee>();
             CreateMap<Employee, EmployeeUpdateRequestDto>().ReverseMap();
             CreateMap<Employee, EmployeeDto>().ForMember(dest => dest.Child, opt =>
                {

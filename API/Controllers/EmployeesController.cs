@@ -20,13 +20,13 @@ namespace API.Controllers
     public class EmployeesController : ControllerBase
     {
         private IEmployeeService _employeeService;
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
         //private readonly IDistributedCache _distributedCache;
         //private ICacheService _cacheService;
-        public EmployeesController(IEmployeeService employeeService,IMapper mapper /*,ICacheService cacheService IDistributedCache distributedCache*/)
+        public EmployeesController(IEmployeeService employeeService/*,IMapper mapper ,ICacheService cacheService IDistributedCache distributedCache*/)
         {
             _employeeService = employeeService;
-            _mapper = mapper;
+            //_mapper = mapper;
             //_distributedCache = distributedCache;
             //_cacheService = cacheService;
         }
@@ -43,10 +43,10 @@ namespace API.Controllers
             //    return Ok(employee);
             //}
             var employees = _employeeService.GetAll();
-            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+            //var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
             //_cacheService.Add("employees", employees);
 
-            return Ok(employeesDto);
+            return Ok(employees);
         }
         
         /// <summary>
@@ -120,8 +120,8 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] EmployeeRequestDto employeeRequestDto)
         {
-            var employee = _mapper.Map<Employee>(employeeRequestDto);
-            var result = _employeeService.Add(employee);
+            //var employee = _mapper.Map<Employee>(employeeRequestDto);
+            var result = _employeeService.Add(employeeRequestDto);
             //_cacheService.Remove("employees");
             return Ok(result); //201 + data
         }
@@ -133,8 +133,8 @@ namespace API.Controllers
         [HttpPost("addtree")]
         public IActionResult PostEmployeeTree([FromBody] EmployeeRequestDto employeeRequestDto)
         {
-            var employee = _mapper.Map<Employee>(employeeRequestDto);
-            var result=_employeeService.AddTree(employee);
+            //var employee = _mapper.Map<Employee>(employeeRequestDto);
+            var result=_employeeService.AddTree(employeeRequestDto);
            // _cacheService.Remove("employees");
             return Ok(result); //201 + data
 
@@ -147,12 +147,12 @@ namespace API.Controllers
             [HttpPut]
         public IActionResult Put([FromBody] EmployeeUpdateRequestDto employeeUpdateRequestDto)
         {
-            var employee = _mapper.Map<Employee>(employeeUpdateRequestDto);
-            if (_employeeService.GetById(employee.Id) != null)
+            //var employee = _mapper.Map<Employee>(employeeUpdateRequestDto);
+            if (_employeeService.GetById(employeeUpdateRequestDto.Id) != null)
             {
-                _employeeService.Update(employee);
+                _employeeService.Update(employeeUpdateRequestDto);
                // _cacheService.Remove("employees");
-                return Ok(employee.Name + " adlı kullanıcının bilgileri başarılı bir şekilde güncellendi.");
+                return Ok(employeeUpdateRequestDto.Name + " adlı kullanıcının bilgileri başarılı bir şekilde güncellendi.");
             }
             return NotFound("Başarısız!!!!");
 

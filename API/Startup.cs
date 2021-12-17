@@ -3,9 +3,11 @@ using API.Redis;
 using Business.Abstract;
 using Business.Concrete;
 using Business.Mapper;
+using Core.DataAccess;
 using DataAccess;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
+using DataAccess.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -62,7 +64,6 @@ namespace API
             });
             services.AddControllers().AddJsonOptions(x =>
                            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
-            
 
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<ICategoryDal, EfCategoryDal>();

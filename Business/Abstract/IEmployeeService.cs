@@ -1,5 +1,6 @@
 ﻿using Core.Utilities.Results;
 using Entities;
+using Entities.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,13 @@ namespace Business.Abstract
 {
     public interface IEmployeeService
     {
-        List<Employee> GetAll();
+        List<EmployeeDto> GetAll();
         Employee GetById(int id);
         List<Employee> GetByParent(int id);
         List<Employee> GetAllChildByParent(int id);
-        IResult Add(Employee entity);
-        IResult AddTree(Employee entity);
-        void Update(Employee entity);
+        IResult Add(EmployeeRequestDto employeeRequestDto);
+        IResult AddTree(EmployeeRequestDto employeeRequestDto);
+        void Update(EmployeeUpdateRequestDto employeeUpdateRequestDto);
         void TreeDelete(int id);
     }
 }
