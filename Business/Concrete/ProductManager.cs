@@ -39,7 +39,7 @@ namespace Business.Concrete
             }
             _productDal.Add(entity);
             productCacheCount++;
-            //_cacheService.Remove(CacheEnum.Products);
+            _cacheService.Remove(CacheEnum.Products);
             return new SuccessResult(Messages.ProductAdded);
         }
 
@@ -47,7 +47,7 @@ namespace Business.Concrete
         {
                 _productDal.Delete(id);
                 productCacheCount++;
-                //_cacheService.Remove(CacheEnum.Products);
+                _cacheService.Remove(CacheEnum.Products);
                 return  new SuccessResult(Messages.ProductDeleted);
         }
 
@@ -60,8 +60,7 @@ namespace Business.Concrete
                     var product = _cacheService.Get<List<Product>>(CacheEnum.Products);
                     return new SuccessDataResult<List<Product>>(product, Messages.ProductsListed);
                 }
-                _cacheService.Remove(CacheEnum.Products);
-                productCacheCount = 0;
+                
             }
             var products = _productDal.GetAll();
             _cacheService.Add(CacheEnum.Products, products);
@@ -100,7 +99,7 @@ namespace Business.Concrete
             }
             _productDal.Update(entity);
             productCacheCount++;
-            //_cacheService.Remove(CacheEnum.Products);
+            _cacheService.Remove(CacheEnum.Products);
             return new SuccessResult(Messages.ProductUpdated);
         }
     }

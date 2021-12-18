@@ -1,4 +1,9 @@
 ﻿using Entities;
+using Entities.Bus;
+using Entities.City;
+using Entities.Customer;
+using Entities.Expedition;
+using Entities.Reservation;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
@@ -20,7 +25,11 @@ namespace DataAccess
         public DbSet<Category> Categories { get; set; }
         public DbSet<AutPersonCredential> AutPersonCredentials { get; set; }
         public DbSet<Employee> Employees { get; set; }
-
+        public DbSet<Bus> Buses { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Expedition> Expeditions { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<City> Cities { get; set; }
 
     }
 }

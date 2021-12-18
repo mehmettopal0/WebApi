@@ -28,14 +28,14 @@ namespace Business.Concrete
         {
             _categoryDal.Add(entity);
             categoryCacheCount++;
-            //_cacheService.Remove(CacheEnum.Categories);
+            _cacheService.Remove(CacheEnum.Categories);
         }
 
         public void Delete(int id)
         {
             _categoryDal.Delete(id);
             categoryCacheCount++;
-            //_cacheService.Remove(CacheEnum.Categories);
+            _cacheService.Remove(CacheEnum.Categories);
         }
 
 
@@ -48,8 +48,7 @@ namespace Business.Concrete
                     var category = _cacheService.Get<List<Category>>(CacheEnum.Categories);
                     return category;
                 }
-                _cacheService.Remove(CacheEnum.Categories);
-                categoryCacheCount = 0;
+                
             }
             var categories = _categoryDal.GetAll();
             _cacheService.Add(CacheEnum.Categories, categories);
@@ -66,7 +65,7 @@ namespace Business.Concrete
         {
             _categoryDal.Update(entity);
             categoryCacheCount++;
-            //_cacheService.Remove(CacheEnum.Categories);
+            _cacheService.Remove(CacheEnum.Categories);
         }
 
         

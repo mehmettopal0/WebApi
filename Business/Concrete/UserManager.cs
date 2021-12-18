@@ -26,14 +26,14 @@ namespace Business.Concrete
         {
             _userDal.Add(entity);
             userCacheCount++;
-            //_cacheService.Remove(CacheEnum.Users);
+            _cacheService.Remove(CacheEnum.Users);
         }
 
         public void Delete(int id)
         {
             _userDal.Delete(id);
             userCacheCount++;
-            //_cacheService.Remove(CacheEnum.Users);
+            _cacheService.Remove(CacheEnum.Users);
         }
 
         public List<User> GetAll()
@@ -45,8 +45,7 @@ namespace Business.Concrete
                     var user = _cacheService.Get<List<User>>(CacheEnum.Users);
                     return user;
                 }
-                _cacheService.Remove(CacheEnum.Users);
-                userCacheCount = 0;
+                
             }
             var users = _userDal.GetAll();
             _cacheService.Add(CacheEnum.Users, users);
@@ -62,7 +61,7 @@ namespace Business.Concrete
         {
             _userDal.Update(entity);
             userCacheCount++;
-            //_cacheService.Remove(CacheEnum.Users);
+            _cacheService.Remove(CacheEnum.Users);
         }
     }
 }

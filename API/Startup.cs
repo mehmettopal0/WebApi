@@ -46,10 +46,10 @@ namespace API
             //    string connectionString = @"DefaultConnection";
             //    opt.UseSqlServer(connectionString);
             //});
-            services.AddDbContext<WebApiDbContext>(options =>
-                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddDbContext<WebApiDbContext>(
-            //         options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
+            //services.AddDbContext<WebApiDbContext>(options =>
+            //         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<WebApiDbContext>(
+                     options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
             services.AddMemoryCache();
             services.AddSingleton<RedisServer>();
             services.AddSingleton<ICacheService, RedisCacheService>();
