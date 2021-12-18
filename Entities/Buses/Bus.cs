@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Bus
+namespace Entities.Buses
 {
-    public class Bus:IEntity
+    public class Bus : IEntity
     {
         [Key]
         public int BusId { get; set; }

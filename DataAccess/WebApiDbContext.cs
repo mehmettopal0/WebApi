@@ -1,8 +1,8 @@
 ﻿using Entities;
-using Entities.Bus;
-using Entities.City;
-using Entities.Customer;
-using Entities.Expedition;
+using Entities.Buses;
+using Entities.Cities;
+using Entities.Customers;
+using Entities.Expeditions;
 using Entities.Reservation;
 using Microsoft.EntityFrameworkCore;
 

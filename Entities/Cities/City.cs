@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.City
+namespace Entities.Cities
 {
-    public class City:IEntity
+    public class City : IEntity
     {
         [Key]
         public int CityId { get; set; }

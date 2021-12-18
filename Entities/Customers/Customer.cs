@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Customer
+namespace Entities.Customers
 {
-    public class Customer:IEntity
+    public class Customer : IEntity
     {
         [Key]
         public int CustomerId { get; set; }
@@ -16,6 +16,6 @@ namespace Entities.Customer
         public string CustomerSurname { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
-        
+
     }
 }
