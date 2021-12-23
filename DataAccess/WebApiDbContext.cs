@@ -30,6 +30,20 @@ namespace DataAccess
         public DbSet<Expedition> Expeditions { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<ProductCom> ProductComs { get; set; }
+        public DbSet<ProductContent> ProductContents { get; set; }
+        public DbSet<ProductSupply> ProductSupplies { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Area> Areas { get; set; }
+        public DbSet<ProductArea> ProductAreas { get; set; }
+        public DbSet<CityArea> CityAreas { get; set; }
+        public DbSet<ProductCity> ProductCities { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ProductArea>().HasKey(x => new { x.AreaId, x.ProductContentId});
+            modelBuilder.Entity<ProductCity>().HasKey(x => new { x.CityAreaId, x.ProductContentId });
+        }
     }
 }

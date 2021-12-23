@@ -4,14 +4,16 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(WebApiDbContext))]
-    partial class WebApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211223093134_init10")]
+    partial class init10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,26 +110,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("Entities.CityArea", b =>
-                {
-                    b.Property<int>("CityAreaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AreaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CityName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CityAreaId");
-
-                    b.HasIndex("AreaId");
-
-                    b.ToTable("CityAreas");
-                });
-
             modelBuilder.Entity("Entities.Company", b =>
                 {
                     b.Property<int>("CompanyId")
@@ -141,6 +123,21 @@ namespace DataAccess.Migrations
                     b.HasKey("CompanyId");
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Entities.ContentArea", b =>
+                {
+                    b.Property<int>("AreaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductContentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AreaId", "ProductContentId");
+
+                    b.HasIndex("ProductContentId");
+
+                    b.ToTable("ContentAreas");
                 });
 
             modelBuilder.Entity("Entities.Customers.Customer", b =>
@@ -270,36 +267,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Entities.ProductArea", b =>
-                {
-                    b.Property<int>("AreaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductContentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AreaId", "ProductContentId");
-
-                    b.HasIndex("ProductContentId");
-
-                    b.ToTable("ProductAreas");
-                });
-
-            modelBuilder.Entity("Entities.ProductCity", b =>
-                {
-                    b.Property<int>("CityAreaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductContentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CityAreaId", "ProductContentId");
-
-                    b.HasIndex("ProductContentId");
-
-                    b.ToTable("ProductCities");
-                });
-
             modelBuilder.Entity("Entities.ProductCom", b =>
                 {
                     b.Property<int>("ProductComId")
@@ -426,15 +393,23 @@ namespace DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Entities.CityArea", b =>
+            modelBuilder.Entity("Entities.ContentArea", b =>
                 {
                     b.HasOne("Entities.Area", "Area")
-                        .WithMany("CityAreas")
+                        .WithMany("ContentAreas")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.ProductContent", "ProductContent")
+                        .WithMany("ContentAreas")
+                        .HasForeignKey("ProductContentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Area");
+
+                    b.Navigation("ProductContent");
                 });
 
             modelBuilder.Entity("Entities.Employee", b =>
@@ -478,44 +453,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Entities.ProductArea", b =>
-                {
-                    b.HasOne("Entities.Area", "Area")
-                        .WithMany("ProductAreas")
-                        .HasForeignKey("AreaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.ProductContent", "ProductContent")
-                        .WithMany("ProductAreas")
-                        .HasForeignKey("ProductContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Area");
-
-                    b.Navigation("ProductContent");
-                });
-
-            modelBuilder.Entity("Entities.ProductCity", b =>
-                {
-                    b.HasOne("Entities.CityArea", "CityArea")
-                        .WithMany("ProductCities")
-                        .HasForeignKey("CityAreaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.ProductContent", "ProductContent")
-                        .WithMany("ProductCities")
-                        .HasForeignKey("ProductContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CityArea");
-
-                    b.Navigation("ProductContent");
                 });
 
             modelBuilder.Entity("Entities.ProductCom", b =>
@@ -577,14 +514,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Area", b =>
                 {
-                    b.Navigation("CityAreas");
-
-                    b.Navigation("ProductAreas");
-                });
-
-            modelBuilder.Entity("Entities.CityArea", b =>
-                {
-                    b.Navigation("ProductCities");
+                    b.Navigation("ContentAreas");
                 });
 
             modelBuilder.Entity("Entities.Employee", b =>
@@ -594,9 +524,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.ProductContent", b =>
                 {
-                    b.Navigation("ProductAreas");
-
-                    b.Navigation("ProductCities");
+                    b.Navigation("ContentAreas");
                 });
 #pragma warning restore 612, 618
         }
