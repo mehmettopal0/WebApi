@@ -4,14 +4,16 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(WebApiDbContext))]
-    partial class WebApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211223182707_init16")]
+    partial class init16
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,9 +235,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CommentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CommentLine")
                         .HasColumnType("nvarchar(max)");
 
@@ -245,7 +244,7 @@ namespace DataAccess.Migrations
                     b.Property<int?>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("UserId")
@@ -253,35 +252,11 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommentId");
-
                     b.HasIndex("PostId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("Entities.Instagram.CommentLike", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CommentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("CommentLikes");
                 });
 
             modelBuilder.Entity("Entities.Instagram.Follow", b =>
@@ -346,8 +321,14 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("PostId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -399,16 +380,13 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PostDescription")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PostUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TypeId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("UserId")
@@ -436,29 +414,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PostTypes");
-                });
-
-            modelBuilder.Entity("Entities.Instagram.Story", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PostUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Story");
                 });
 
             modelBuilder.Entity("Entities.Language", b =>
@@ -706,10 +661,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Instagram.Comment", b =>
                 {
-                    b.HasOne("Entities.Instagram.Comment", "Parent")
-                        .WithMany("SubComments")
-                        .HasForeignKey("CommentId");
-
                     b.HasOne("Entities.Instagram.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId");
@@ -720,24 +671,7 @@ namespace DataAccess.Migrations
 
                     b.Navigation("InstagramUser");
 
-                    b.Navigation("Parent");
-
                     b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("Entities.Instagram.CommentLike", b =>
-                {
-                    b.HasOne("Entities.Instagram.Comment", "Comment")
-                        .WithMany("CommentLikes")
-                        .HasForeignKey("CommentId");
-
-                    b.HasOne("Entities.Instagram.InstagramUser", "InstagramUser")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("InstagramUser");
                 });
 
             modelBuilder.Entity("Entities.Instagram.Follow", b =>
@@ -798,15 +732,6 @@ namespace DataAccess.Migrations
                     b.Navigation("InstagramUser");
 
                     b.Navigation("PostType");
-                });
-
-            modelBuilder.Entity("Entities.Instagram.Story", b =>
-                {
-                    b.HasOne("Entities.Instagram.InstagramUser", "InstagramUser")
-                        .WithMany("Stories")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("InstagramUser");
                 });
 
             modelBuilder.Entity("Entities.Product", b =>
@@ -932,13 +857,6 @@ namespace DataAccess.Migrations
                     b.Navigation("SubChild");
                 });
 
-            modelBuilder.Entity("Entities.Instagram.Comment", b =>
-                {
-                    b.Navigation("CommentLikes");
-
-                    b.Navigation("SubComments");
-                });
-
             modelBuilder.Entity("Entities.Instagram.InstagramUser", b =>
                 {
                     b.Navigation("Comments");
@@ -946,8 +864,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Likes");
 
                     b.Navigation("Posts");
-
-                    b.Navigation("Stories");
                 });
 
             modelBuilder.Entity("Entities.Instagram.Post", b =>

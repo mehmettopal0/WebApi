@@ -3,6 +3,7 @@ using Entities.Buses;
 using Entities.Cities;
 using Entities.Customers;
 using Entities.Expeditions;
+using Entities.Instagram;
 using Entities.Reservation;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +40,15 @@ namespace DataAccess
         public DbSet<ProductArea> ProductAreas { get; set; }
         public DbSet<CityArea> CityAreas { get; set; }
         public DbSet<ProductCity> ProductCities { get; set; }
+        public DbSet<InstagramUser> InstagramUsers { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<PostType> PostTypes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<Follow> Follows { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<CommentLike> CommentLikes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

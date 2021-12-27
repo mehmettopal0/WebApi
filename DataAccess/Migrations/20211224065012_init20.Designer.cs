@@ -4,14 +4,16 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(WebApiDbContext))]
-    partial class WebApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211224065012_init20")]
+    partial class init20
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,12 +274,17 @@ namespace DataAccess.Migrations
                     b.Property<int?>("CommentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CommentLikeId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
+
+                    b.HasIndex("CommentLikeId");
 
                     b.HasIndex("UserId");
 
@@ -728,8 +735,12 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Entities.Instagram.CommentLike", b =>
                 {
                     b.HasOne("Entities.Instagram.Comment", "Comment")
-                        .WithMany("CommentLikes")
+                        .WithMany()
                         .HasForeignKey("CommentId");
+
+                    b.HasOne("Entities.Instagram.CommentLike", null)
+                        .WithMany("CommentLikes")
+                        .HasForeignKey("CommentLikeId");
 
                     b.HasOne("Entities.Instagram.InstagramUser", "InstagramUser")
                         .WithMany()
@@ -934,9 +945,12 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Instagram.Comment", b =>
                 {
-                    b.Navigation("CommentLikes");
-
                     b.Navigation("SubComments");
+                });
+
+            modelBuilder.Entity("Entities.Instagram.CommentLike", b =>
+                {
+                    b.Navigation("CommentLikes");
                 });
 
             modelBuilder.Entity("Entities.Instagram.InstagramUser", b =>
