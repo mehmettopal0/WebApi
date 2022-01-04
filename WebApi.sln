@@ -11,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Busine
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{D6BF63DC-9E68-40AF-9E28-E4CCC5BB4C56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{7228A0D9-C87C-4A75-9CC8-A4D20C6F9625}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{7228A0D9-C87C-4A75-9CC8-A4D20C6F9625}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{67B11D52-2D7D-4DF4-9F72-13C21EF8FA23}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Turnike-Console", "ConsoleApp2\Turnike-Console.csproj", "{8B548DD9-51D0-49F8-A72F-90BFA6C70780}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{7228A0D9-C87C-4A75-9CC8-A4D20C6F9625}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7228A0D9-C87C-4A75-9CC8-A4D20C6F9625}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7228A0D9-C87C-4A75-9CC8-A4D20C6F9625}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67B11D52-2D7D-4DF4-9F72-13C21EF8FA23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B11D52-2D7D-4DF4-9F72-13C21EF8FA23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67B11D52-2D7D-4DF4-9F72-13C21EF8FA23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67B11D52-2D7D-4DF4-9F72-13C21EF8FA23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B548DD9-51D0-49F8-A72F-90BFA6C70780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B548DD9-51D0-49F8-A72F-90BFA6C70780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B548DD9-51D0-49F8-A72F-90BFA6C70780}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B548DD9-51D0-49F8-A72F-90BFA6C70780}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
