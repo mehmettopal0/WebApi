@@ -7,9 +7,6 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="5.8.4" />
-    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
-    <PackageReference Include="System.Collections" Version="4.3.0" />
-    <PackageReference Include="System.Data.OleDb" Version="6.0.0" />
   </ItemGroup>
 
 </Project>
